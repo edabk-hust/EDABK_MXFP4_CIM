@@ -1,3 +1,4 @@
+# Original .gitignore file from Caravel repository
 /.idea/
 /precheck_results/
 */tmp
@@ -15,3 +16,7 @@
 /logs
 openlane2-venv
 design_info.yaml
+
+# Additional .gitignore entries
+old.md
+temp.txt

@@ -1,6 +1,15 @@
 <div align="center">
 
-<img src="https://umsousercontent.com/lib_lnlnuhLgkYnZdkSC/hj0vk05j0kemus1i.png" alt="ChipFoundry Logo" height="140" />
+<table border="0">
+  <tr>
+    <td align="center" style="border: none;">
+      <img src="img/chip_foundry_logo.png" alt="Chipfoundry Logo" width="200"/>
+    </td>
+    <td align="center" style="border: none; padding-left: 50px;">
+      <img src="img/EDA_logo_Darkblue.png" alt="EDABK Logo" width="110"/>
+    </td>
+  </tr>
+</table>
 
 [![Typing SVG](https://readme-typing-svg.demolab.com?font=Inter&size=44&duration=3000&pause=600&color=4C6EF5&center=true&vCenter=true&width=1100&lines=Caravel+User+Project+Template;OpenLane+%2B+ChipFoundry+Flow;Verification+and+Shuttle-Ready)](https://git.io/typing-svg)
 
@@ -9,23 +18,42 @@
 
 </div>
 
+---
+
 ## Table of Contents
-- [Overview](#overview)
+- [Abstract](#abstract)
+- [Contributors](#contributors)
 - [Documentation & Resources](#documentation--resources)
 - [Prerequisites](#prerequisites)
-- [Project Structure](#project-structure)
-- [Starting Your Project](#starting-your-project)
-- [Development Flow](#development-flow)
-- [GPIO Configuration](#gpio-configuration)
-- [Local Precheck](#local-precheck)
+- [System Block Diagram](#system-block-diagram)
+- [Timeline](#timeline)
 - [Checklist for Shuttle Submission](#checklist-for-shuttle-submission)
 
-## Overview
-This repository contains a user project designed for integration into the **Caravel chip user space**. Use it as a template for integrating custom RTL with Caravel's system-on-chip (SoC) utilities, including:
+---
 
-* **IO Pads:** Configurable general-purpose input/output.
-* **Logic Analyzer Probes:** 128 signals for non-intrusive hardware debugging.
-* **Wishbone Port:** A 32-bit standard bus interface for communication between the RISC-V management core and your custom hardware.
+## Abstract
+
+The advancement of Large Language Models (LLMs) demands hardware solutions capable of efficiently storing and processing large weight matrices while maintaining high throughput, energy, and area efficiency. One promising solution is adopting low-precision numerical formats. Standardized by the Open Compute Project (OCP) in early 2024, Microscaling floating-point numbers (MXFP) introduce a shared-scale mechanism that optimizes both computation and memory, improving AI workload efficiency. Specifically, MXFP4 (Microscaling 4-bit Floating-Point), which uses 4-bit floating-point elements with shared scaling, reduces storage and computation costs while maintaining a wide dynamic range.
+
+The Microscaling Data Formats for Deep Learning study (2023) shows that MXFP4 can effectively replaces FP32 with minimal accuracy loss. On the GPT-2 (1.5B) model, Perplexity increases from 18.4 (FP32) to 18.7 (MXFP4). For ResNet-50, Top-1 accuracy is 75.9%, close to the 76.1% baseline. MXFP4 reduces storage and computation costs by up to 8x while maintaining stable performance for large Transformer and LLM models.
+
+However, on the hardware side, designing arithmetic units to efficiently support this format is challenging due to its unique representation and scaling, especially in moving weights between memory and compute units. Compute-in-memory (CIM) addresses this by performing operations within memory, reducing energy consumption and latency. MXFP4 is well-suited for CIM due to its compact representation and shared scale mechanism, enabling efficient weight storage and scaling in the computation pipeline.
+
+Therefore, our team proposes **EDABK_MXFP4_CIM**, an architecture designed with the goal of performing the General Matrix Multiplication (GEMM) for the MXFP4 format using CIM. The overall architecture and activities' waveforms are described in the [System Block Diagram](#system-block-diagram) section. 
+
+The key optimization of this design include the use of Compute-in-Memory (CIM) to reduce memory access time and improve efficiency by performing computations within memory. Additionally, results are accumulated before being quantized into MXFP4, preserving precision and ensuring better accuracy in high-precision tasks like General Matrix Multiplication (GEMM).
+
+---
+
+## Contributors
+
+All members are affiliated to EDABK Laboratory, School of Electrical and Electronic Engineering, Hanoi University of Science and Technology (HUST).
+
+| No. | Name                                                         | Study programme                           | Relevant link |
+| --- | ------------------------------------------------------------ | ----------------------------------------- | ------------- |
+| 1   | [Phuong-Linh Nguyen](mailto:linh.nguyenphuong1@sis.hust.edu.vn) | Master of Engineer in IC Design           |               |
+| 2   | [Ngoc-Duong Nguyen](mailto:duong.nn242535m@sis.hust.edu.vn)     | Master of Science in IC Design            |               |
+| 3   | [Viet-Tung Pham](mailto:tung.pv224415@sis.hust.edu.vn)          | Senior student in Electronics Engineering |               |
 
 ---
 
@@ -35,6 +63,7 @@ For detailed hardware specifications and register maps, refer to the following o
 * **[Caravel Datasheet](https://github.com/chipfoundry/caravel/blob/main/docs/caravel_datasheet_2.pdf)**: Detailed electrical and physical specifications of the Caravel harness.
 * **[Caravel Technical Reference Manual (TRM)](https://github.com/chipfoundry/caravel/blob/main/docs/caravel_datasheet_2_register_TRM_r2.pdf)**: Complete register maps and programming guides for the management SoC.
 * **[ChipFoundry Marketplace](https://platform.chipfoundry.io/marketplace)**: Access additional IP blocks, EDA tools, and shuttle services.
+* **[OCP Microscaling Formats (MX) Specification](https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf)**: Detailed specifications of the Microscaling Formats.
 
 ---
 
@@ -47,179 +76,14 @@ Ensure your environment meets the following requirements:
 
 ---
 
-## Project Structure
-A successful Caravel project requires a specific directory layout for the automated tools to function:
-
-| Directory | Description |
-| :--- | :--- |
-| `openlane/` | Configuration files for hardening macros and the wrapper. |
-| `verilog/rtl/` | Source Verilog code for the project. |
-| `verilog/gl/` | Gate-level netlists (generated after hardening). |
-| `verilog/dv/` | Design Verification (cocotb and Verilog testbenches). |
-| `gds/` | Final GDSII binary files for fabrication. |
-| `lef/` | Library Exchange Format files for the macros. |
+## System Block Diagram
+![EDABK_MXFP4_CIM's write and CIM operation](img/wave_Cim.png)
+![EDABK_MXFP4_CIM's read operation](img/wave_Read.png)
 
 ---
 
-## Starting Your Project
+## Timeline
 
-### 1. Repository Setup
-Create a new repository based on the `caravel_user_project` template and clone it to your local machine:
-
-```bash
-git clone <your-github-repo-URL>
-pip install chipfoundry-cli
-cd <project_name>
-```
-
-### 2. Project Initialization
-
-> [!IMPORTANT]
-> Run this first! Initialize your project configuration:
-
-```bash
-cf init
-```
-
-This creates `.cf/project.json` with project metadata. **This must be run before any other commands** (`cf setup`, `cf gpio-config`, `cf harden`, `cf precheck`, `cf verify`).
-
-### 3. Environment Setup
-Install the ChipFoundry CLI tool and set up the local environment (PDKs, OpenLane, and Caravel lite):
-
-```bash
-cf setup
-```
-
-The `cf setup` command installs:
-
-- Caravel Lite: The Caravel SoC template.
-- Management Core: RISC-V management area required for simulation.
-- OpenLane: The RTL-to-GDS hardening flow.
-- PDK: Skywater 130nm process design kit.
-- Timing Scripts: For Static Timing Analysis (STA).
-
----
-
-## Development Flow
-
-### Hardening the Design
-Hardening is the process of synthesizing your RTL and performing Place & Route (P&R) to create a GDSII layout.
-
-#### Macro Hardening
-Create a subdirectory for each custom macro under `openlane/` containing your `config.tcl`.
-
-```bash
-cf harden --list         # List detected configurations
-cf harden <macro_name>   # Harden a specific macro
-```
-
-#### Integration
-Instantiate your module(s) in `verilog/rtl/user_project_wrapper.v`.
-
-Update `openlane/user_project_wrapper/config.json` environment variables (`VERILOG_FILES_BLACKBOX`, `EXTRA_LEFS`, `EXTRA_GDS_FILES`) to point to your new macros.
-
-#### Wrapper Hardening
-Finalize the top-level user project:
-
-```bash
-cf harden user_project_wrapper
-```
-
-### Verification
-
-#### 1. Simulation
-We use cocotb for functional verification. Ensure your file lists are updated in `verilog/includes/`.
-
-**Configure GPIO settings first (required before verification):**
-
-```bash
-cf gpio-config
-```
-
-This interactive command will:
-- Configure all GPIO pins interactively
-- Automatically update `verilog/rtl/user_defines.v`
-- Automatically run `gen_gpio_defaults.py` to generate GPIO defaults for simulation
-
-GPIO configuration is required before running any verification tests.
-
-Run RTL Simulation:
-
-```bash
-cf verify <test_name>
-```
-
-Run Gate-Level (GL) Simulation:
-
-```bash
-cf verify <test_name> --sim gl
-```
-
-Run all tests:
-
-```bash
-cf verify --all
-```
-
-#### 2. Static Timing Analysis (STA)
-Verify that your design meets timing constraints using OpenSTA:
-
-```bash
-make extract-parasitics
-make create-spef-mapping
-make caravel-sta
-```
-
-> [!NOTE]
-> Run `make setup-timing-scripts` if you need to update the STA environment.
-
----
-
-## GPIO Configuration
-Configure the power-on default configuration for each GPIO using the interactive CLI tool.
-
-**Use the GPIO configuration command:**
-```bash
-cf gpio-config
-```
-
-This command will:
-- Present an interactive form for configuring GPIO pins 5-37 (GPIO 0-4 are fixed system pins)
-- Show available GPIO modes with descriptions
-- Allow selection by number, partial key, or full mode name
-- Save configuration to `.cf/project.json` (as hex values)
-- Automatically update `verilog/rtl/user_defines.v` with the new configuration
-- Automatically run `gen_gpio_defaults.py` to generate GPIO defaults for simulation (if Caravel is installed)
-
-**GPIO Pin Information:**
-- GPIO[0] to GPIO[4]: Preset system pins (do not change).
-- GPIO[5] to GPIO[37]: User-configurable pins.
-
-**Available GPIO Modes:**
-- Management modes: `mgmt_input_nopull`, `mgmt_input_pulldown`, `mgmt_input_pullup`, `mgmt_output`, `mgmt_bidirectional`, `mgmt_analog`
-- User modes: `user_input_nopull`, `user_input_pulldown`, `user_input_pullup`, `user_output`, `user_bidirectional`, `user_output_monitored`, `user_analog`
-
-> [!NOTE]
-> GPIO configuration is required before running `cf precheck` or `cf verify`. Invalid modes cannot be saved - all GPIOs must have valid configurations.
-
----
-
-## Local Precheck
-Before submitting your design for fabrication, run the local precheck to ensure it complies with all shuttle requirements:
-
-> [!IMPORTANT]
-> GPIO configuration is required before running precheck. Make sure you've run `cf gpio-config` first.
-
-```bash
-cf precheck
-```
-
-You can also run specific checks or disable LVS:
-
-```bash
-cf precheck --disable-lvs                    # Skip LVS check
-cf precheck --checks license --checks makefile  # Run specific checks only
-```
 ---
 
 ## Checklist for Shuttle Submission
