@@ -85,9 +85,99 @@ Ensure your environment meets the following requirements:
 
 ## System Block Diagram
 
-![EDABK_MXFP4_CIM's Block Diagram](img/Block.png)
-![EDABK_MXFP4_CIM's write and CIM operation](img/wave_Cim.png)
-![EDABK_MXFP4_CIM's read operation](img/wave_Read.png)
+<p align="center">
+<img src="img/Block.png" alt="EDABK_MXFP4_CIM's Block Diagram" width="800"/>
+</p>
+
+<p align="center">
+<table style="border-collapse: collapse; border: none; margin-left: auto; margin-right: auto; width: 90%;">
+<thead>
+<tr style="border-bottom: 2px solid #4C6EF5; background-color: rgba(76, 110, 245, 0.1);">
+<th align="left" style="padding: 12px; border: none;">Signal Name</th>
+<th align="center" style="padding: 12px; border: none;">Direction</th>
+<th align="center" style="padding: 12px; border: none;">Width</th>
+<th align="left" style="padding: 12px; border: none;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom: 1px solid #eee;">
+<td style="padding: 10px; border: none;"><b>D_in</b></td>
+<td align="center" style="padding: 10px; border: none;">Input</td>
+<td align="center" style="padding: 10px; border: none;">4-bit</td>
+<td style="padding: 10px; border: none;">Data input bus for MXFP4 inputs and weights.</td>
+</tr>
+<tr style="border-bottom: 1px solid #eee;">
+<td style="padding: 10px; border: none;"><b>Wr_en</b></td>
+<td align="center" style="padding: 10px; border: none;">Input</td>
+<td align="center" style="padding: 10px; border: none;">1-bit</td>
+<td style="padding: 10px; border: none;">Write Enable: Used to load weight data into memory.</td>
+</tr>
+<tr style="border-bottom: 1px solid #eee;">
+<td style="padding: 10px; border: none;"><b>Rd_en</b></td>
+<td align="center" style="padding: 10px; border: none;">Input</td>
+<td align="center" style="padding: 10px; border: none;">1-bit</td>
+<td style="padding: 10px; border: none;">Read Enable: Standard memory access to verify stored weight values.</td>
+</tr>
+<tr style="border-bottom: 1px solid #eee;">
+<td style="padding: 10px; border: none;"><b>En</b></td>
+<td align="center" style="padding: 10px; border: none;">Input</td>
+<td align="center" style="padding: 10px; border: none;">1-bit</td>
+<td style="padding: 10px; border: none;">Operations Enable for the Computing-In-Memory (CIM) macro.</td>
+</tr>
+<tr style="border-bottom: 1px solid #eee;">
+<td style="padding: 10px; border: none;"><b>Addr</b></td>
+<td align="center" style="padding: 10px; border: none;">Input</td>
+<td align="center" style="padding: 10px; border: none;">5-bit</td>
+<td style="padding: 10px; border: none;">Column Address Decoder (Supports 32 columns).</td>
+</tr>
+<tr style="border-bottom: 1px solid #eee;">
+<td style="padding: 10px; border: none;"><b>Scale</b></td>
+<td align="center" style="padding: 10px; border: none;">Input</td>
+<td align="center" style="padding: 10px; border: none;">8-bit</td>
+<td style="padding: 10px; border: none;">Scaling factor for MXFP4 quantization and normalization process.</td>
+</tr>
+<tr style="border-bottom: 1px solid #eee;">
+<td style="padding: 10px; border: none;"><b>Done</b></td>
+<td align="center" style="padding: 10px; border: none;">Output</td>
+<td align="center" style="padding: 10px; border: none;">1-bit</td>
+<td style="padding: 10px; border: none;">Indicates completion of MAC accumulation and quantization.</td>
+</tr>
+<tr style="border-bottom: 1px solid #eee;">
+<td style="padding: 10px; border: none;"><b>Sel</b></td>
+<td align="center" style="padding: 10px; border: none;">Input</td>
+<td align="center" style="padding: 10px; border: none;">1-bit</td>
+<td style="padding: 10px; border: none;">Mode Select: Switch between Weight Loading and CIM Computation mode.</td>
+</tr>
+<tr style="border-bottom: 1px solid #eee;">
+<td style="padding: 10px; border: none;"><b>D_rd</b></td>
+<td align="center" style="padding: 10px; border: none;">Output</td>
+<td align="center" style="padding: 10px; border: none;">4-bit</td>
+<td style="padding: 10px; border: none;">Standard data output for memory read-back operations.</td>
+</tr>
+<tr style="border-bottom: 1px solid #eee;">
+<td style="padding: 10px; border: none;"><b>D_out</b></td>
+<td align="center" style="padding: 10px; border: none;">Output</td>
+<td align="center" style="padding: 10px; border: none;">4-bit</td>
+<td style="padding: 10px; border: none;">Final computed MXFP4 result from the CIM core.</td>
+</tr>
+</tbody>
+</table>
+</p>
+
+<p align="center">
+  <table border="0" style="border-collapse: collapse; border: none; margin-left: auto; margin-right: auto; width: 100%;">
+    <tr>
+      <td align="center" style="border: none; width: 50%; padding: 5px;">
+        <img src="img/wave_Cim.png" alt="CIM operation" style="width: 100%; border-radius: 4px;"/>
+        <br><em>CIM Operation Waveform</em>
+      </td>
+      <td align="center" style="border: none; width: 50%; padding: 5px;">
+        <img src="img/wave_Read.png" alt="Read operation" style="width: 100%; border-radius: 4px;"/>
+        <br><em>Read Operation Waveform</em>
+      </td>
+    </tr>
+  </table>
+</p>
 
 ---
 
