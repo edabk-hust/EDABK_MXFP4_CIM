@@ -20,6 +20,12 @@
 
 ---
 
+# EDABK_MXFP4_CIM
+
+> This project, submitted to **Systems to Silicon Design Contest**, introduces a Compute-in-Memory Accelerator for MXFP4 GEMM, integrated and controlled by Caravel SoC Platform.
+
+---
+
 ## Table of Contents
 - [Abstract](#abstract)
 - [Contributors](#contributors)
@@ -37,9 +43,9 @@ The advancement of Large Language Models (LLMs) demands hardware solutions capab
 
 The Microscaling Data Formats for Deep Learning study (2023) shows that MXFP4 can effectively replaces FP32 with minimal accuracy loss. On the GPT-2 (1.5B) model, Perplexity increases from 18.4 (FP32) to 18.7 (MXFP4). For ResNet-50, Top-1 accuracy is 75.9%, close to the 76.1% baseline. MXFP4 reduces storage and computation costs by up to 8x while maintaining stable performance for large Transformer and LLM models.
 
-However, on the hardware side, efficiently supporting this format is challenging due to its unique representation and scaling, particularly in moving weights between memory and compute units. Compute-in-memory (CIM) solves this by performing operations within memory, reducing energy consumption and latency. MXFP4 is ideal for CIM due to its compact representation and shared scale mechanism, enabling efficient weight storage and scaling in the computation pipeline.
+However, on the hardware side, efficiently supporting LLMs, particularly accelerator for General Matrix Multiplication (GEMM) using this format is challenging due to its unique representation and scaling, particularly in moving weights between memory and compute units. Compute-in-memory (CIM) solves this by performing operations within memory, reducing energy consumption and latency. MXFP4 is ideal for CIM, with its compact representation and shared scale mechanism enabling efficient weight storage and scaling.
 
-Therefore, our team proposes **EDABK_MXFP4_CIM**, an architecture designed with the goal of performing the General Matrix Multiplication (GEMM) for the MXFP4 format using CIM. The overall architecture and activities' waveforms are described in the [System Block Diagram](#system-block-diagram) section. 
+Therefore, our team proposes **EDABK_MXFP4_CIM**, an architecture designed with the goal of performing the GEMM for the MXFP4 format using CIM. The overall architecture and activities' waveforms are described in the [System Block Diagram](#system-block-diagram) section. 
 
 The key optimization of this design include the use of Compute-in-Memory (CIM) to reduce memory access time and improve efficiency by performing computations within memory. Additionally, results are accumulated before being quantized into MXFP4, preserving precision and ensuring better accuracy in high-precision tasks like General Matrix Multiplication (GEMM).
 
@@ -53,7 +59,8 @@ All members are affiliated to EDABK Laboratory, School of Electrical and Electro
 | --- | ------------------------------------------------------------ | ----------------------------------------- | ------------- |
 | 1   | [Phuong-Linh Nguyen](mailto:linh.nguyenphuong1@sis.hust.edu.vn) | Master of Engineer in IC Design           |               |
 | 2   | [Ngoc-Duong Nguyen](mailto:duong.nn242535m@sis.hust.edu.vn)     | Master of Science in IC Design            |               |
-| 3   | [Viet-Tung Pham](mailto:tung.pv224415@sis.hust.edu.vn)          | Senior student in Electronics Engineering |               |
+| 3   | [Hoang-Son Nguyen](mailto:son.nh210741@sis.hust.edu.vn)         | Bachelor in Electronics Engineering       |               |
+| 4   | [Viet-Tung Pham](mailto:tung.pv224415@sis.hust.edu.vn)          | Senior student in Electronics Engineering |               |
 
 ---
 
@@ -77,6 +84,8 @@ Ensure your environment meets the following requirements:
 ---
 
 ## System Block Diagram
+
+![EDABK_MXFP4_CIM's Block Diagram](img/Block.png)
 ![EDABK_MXFP4_CIM's write and CIM operation](img/wave_Cim.png)
 ![EDABK_MXFP4_CIM's read operation](img/wave_Read.png)
 
